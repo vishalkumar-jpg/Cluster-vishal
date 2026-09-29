@@ -120,12 +120,24 @@ resource "aws_iam_openid_connect_provider" "eks" {
 }
 
 # =============================================================================
-# CoreDNS Patch  (Fargate requires removing the ec2 compute-type annotation)
+# Fargate Logging — create the namespace and ConfigMap from scratch
 # =============================================================================
-resource "kubernetes_config_map_v1_data" "aws_logging" {
+resource "kubernetes_namespace" "aws_observability" {
+  metadata {
+    name = "aws-observability"
+
+    labels = {
+      "aws-observability" = "enabled"
+    }
+  }
+
+  depends_on = [aws_eks_fargate_profile.namespaces]
+}
+
+resource "kubernetes_config_map" "aws_logging" {
   metadata {
     name      = "aws-logging"
-    namespace = "aws-observability"
+    namespace = kubernetes_namespace.aws_observability.metadata[0].name
   }
 
   data = {
@@ -139,6 +151,5 @@ resource "kubernetes_config_map_v1_data" "aws_logging" {
           auto_create_group true
     EOF
   }
-
-  depends_on = [aws_eks_fargate_profile.namespaces]
 }
+
