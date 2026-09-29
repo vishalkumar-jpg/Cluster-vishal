@@ -52,3 +52,11 @@ output "configure_kubectl" {
   description = "Command to configure kubectl for this cluster"
   value       = "aws eks update-kubeconfig --region ${var.aws_region} --name ${aws_eks_cluster.main.name}"
 }
+
+# =============================================================================
+# ALB Controller
+# =============================================================================
+output "alb_controller_role_arn" {
+  description = "ARN of the IAM role for AWS Load Balancer Controller"
+  value       = aws_iam_role.alb_controller.arn
+}
