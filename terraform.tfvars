@@ -14,7 +14,7 @@ public_subnet_cidrs  = ["10.0.101.0/24", "10.0.102.0/24"]
 cluster_version = "1.32"
 
 # Namespaces that will run on Fargate (add more as needed)
-fargate_namespaces = ["default", "kube-system"]
+fargate_namespaces = ["default", "kube-system", "argocd"]
 
 tags = {
   Owner = "vishal"
